@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    name: { first: String, last: String },
+    name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
     phone: {
@@ -21,8 +21,8 @@ const userSchema = mongoose.Schema({
     updated_at: { type: Date, default: Date.now },
 });
 
-userSchema.virtual('fullName').get(function () {
+/*userSchema.virtual('fullName').get(function () {
     return this.name.first + ' ' + this.name.last;
-});
+});*/
 
 module.exports = mongoose.model('User', userSchema);

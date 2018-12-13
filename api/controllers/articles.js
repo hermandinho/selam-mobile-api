@@ -5,9 +5,24 @@ exports.fetch =(req, res, next) => {
     let limit = parseInt(req.query.limit) || 10;
     let dateSort = parseInt(req.query.dateSort) || 1;
     let priceSort = parseInt(req.query.priceSort) || -1;
+    let regionFilter = req.query.region || '';
+
     // TODO add query param to check if to apply available && published filters
-    Article.paginate({published: true, available: true}, { page: page, limit: limit, sort: { updated_at: dateSort, 'price.amount': priceSort } })
-        // .exec()
+    let search = {published: true, available: true};
+    if (regionFilter.trim().length) {
+        search['region'] = regionFilter.split(',');
+    }
+
+    Article.paginate(search,
+        {
+            page: page, limit: limit,
+            sort: { updated_at: dateSort, 'price.amount': priceSort },
+            populate: [
+                { path: 'user', select: 'name' },
+                { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
+            ]
+        },
+    )
         .then(docs => {
             res.status(200).json(docs);
         })
@@ -56,7 +71,7 @@ exports.create = (req, res, next) => {
         region: req.body.region,
         //displayPhoneNumber: req.body.displayPhoneNumber, // Moved to user model
         //displayEmail: req.body.displayEmail,  // Moved to user model
-        user: req.body.user,
+        user: req.userData.id,
         subCategory: req.body.subCategory,
         exchange: req.body.exchange,
         published: true, //req.body.published, // TODO set to false if articles are to be validated before publishing

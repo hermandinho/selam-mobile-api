@@ -26,7 +26,7 @@ exports.login = (req, res, next) => {
                     return res.status(401).json({error: "Erreur de d'authentification"})
                 }
                 if (r) {
-                    const token = jwt.sign({ email: user.email }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
+                    const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
                     manageDevice(user._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
                         console.log('DEVICE MANAGED');
                     });
@@ -64,7 +64,7 @@ exports.signup = async (req, res, next) => {
                             password: hash,
                             name: req.body.name
                         }).save().then(u => {
-                            const token = jwt.sign({ email: u.email }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
+                            const token = jwt.sign({ email: u.email, id: u._id }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
                             manageDevice(u._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
                                 console.log('DEVICE MANAGED');
                             });
