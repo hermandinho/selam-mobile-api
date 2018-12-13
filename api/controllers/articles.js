@@ -137,7 +137,7 @@ exports.patch = (req, res, next) => {
 }
 
 exports.upload = async (req, res, next) => {
-    // console.log(req.file, req.params.id);
+    //console.log(req.file, req.params.id);
     // TODO update path to absolute URL
     let article = await Article.findOneAndUpdate({_id: req.params.id}, { $push: { pictures: process.env.APP_URL + '/' + req.file.path } });
     res.status(200).json({ message: 'Ok' });
