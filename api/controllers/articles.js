@@ -3,35 +3,13 @@ const Article = require('../models/article');
 exports.fetch =(req, res, next) => {
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
+    let dateSort = parseInt(req.query.dateSort) || 1;
+    let priceSort = parseInt(req.query.priceSort) || -1;
     // TODO add query param to check if to apply available && published filters
-    Article.paginate({published: true, available: true}, { page: page, limit: limit })
+    Article.paginate({published: true, available: true}, { page: page, limit: limit, sort: { updated_at: dateSort, 'price.amount': priceSort } })
         // .exec()
         .then(docs => {
-            res.status(200).json(docs/*{
-                count: docs.length,
-                article: docs.map(doc => {
-                    return {
-                        title: doc.title,
-                        description: doc.description,
-                        price: doc.price,
-                        currency: doc.currency,
-                        picture: doc.picture,
-                        region: doc.region,
-                        displayPhoneNumber: doc.displayPhoneNumber,
-                        displayEmail: doc.displayEmail,
-                        user: doc.user,
-                        subCategory: doc.subCategory,
-                        published: doc.published,
-                        available: doc.available,
-                        created_at: doc.created_at,
-                        updated_at: doc.updated_at,
-                        request: {
-                            type: "GET",
-                            url: "http://localhost:5000/api/v1/article/" + doc._id
-                        }
-                    };
-                })
-            }*/);
+            res.status(200).json(docs);
         })
         .catch(err => {
             res.status(500).json({
@@ -60,9 +38,9 @@ exports.find = (req, res, next) => {
 
 exports.create = (req, res, next) => {
     let pictures = req.body.pictures || [];
-    if (!pictures.length)
-        pictures.push('res://ic_no_image');
-    else if (pictures.length === 1 && pictures[0] === '*') {
+    /*if (!pictures.length)
+        pictures.push('res://ic_no_image');*/
+    if (pictures.length === 1 && pictures[0] === '*') {
         // IMAGES TO BE UPLOADED
         pictures = [];
     }

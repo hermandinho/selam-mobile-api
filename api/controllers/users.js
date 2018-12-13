@@ -1,6 +1,19 @@
 const User = require('../models/user');
+const Device = require('../models/device');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
+
+const manageDevice = async (uid, params) => {
+    params.user = uid;
+    let check = await Device.findOne({ user: uid, uuid: params.uuid }).exec();
+    let device;
+    if (check && check._id) {
+        device = await Device.findOneAndUpdate({ user: uid, uuid: params.uuid }, { $set: { lastOnline: new Date(), updated_at: new Date() } });
+    } else {
+        device = await new Device(params).save();
+    }
+    Promise.resolve(device)
+};
 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email }).exec()
@@ -14,6 +27,9 @@ exports.login = (req, res, next) => {
                 }
                 if (r) {
                     const token = jwt.sign({ email: user.email }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
+                    manageDevice(user._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
+                        console.log('DEVICE MANAGED');
+                    });
                     return res.status(200).json({
                         token,
                         user
@@ -28,7 +44,7 @@ exports.login = (req, res, next) => {
         });
 };
 
-exports.signup = (req, res, next) => {
+exports.signup = async (req, res, next) => {
     User.find({ email: req.body.email }).exec()
         .then(user => {
             if (user.length >= 1)
@@ -49,6 +65,9 @@ exports.signup = (req, res, next) => {
                             name: req.body.name
                         }).save().then(u => {
                             const token = jwt.sign({ email: u.email }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
+                            manageDevice(u._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
+                                console.log('DEVICE MANAGED');
+                            });
                             res.status(201).json({
                                 user: u,
                                 token
