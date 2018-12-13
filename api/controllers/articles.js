@@ -62,7 +62,7 @@ exports.create = (req, res, next) => {
     let pictures = req.body.pictures || [];
     if (!pictures.length)
         pictures.push('res://ic_no_image');
-    if (pictures.length === 1 && pictures[0] === '*') {
+    else if (pictures.length === 1 && pictures[0] === '*') {
         // IMAGES TO BE UPLOADED
         pictures = [];
     }
