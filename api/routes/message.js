@@ -6,7 +6,7 @@ const messageController = require('../controllers/messages');
 
 router.get('/',checkAuth, messageController.fetch);
 router.get('/:id',checkAuth, messageController.find);
-router.post('/create',checkAuth, messageController.create);
+router.post('/create/:receiver/send',checkAuth, messageController.create);
 router.delete('/:id',checkAuth, messageController.delete);
 router.patch('/:id', checkAuth, messageController.patch);
 
