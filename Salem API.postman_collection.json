@@ -1,0 +1,1345 @@
+{
+	"info": {
+		"_postman_id": "278ae999-3ce7-46a8-a45a-c0b9561547bf",
+		"name": "Salem API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Article",
+			"item": [
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/article/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"article",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/article/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"article",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"phone\",\n    \"description\": \"xiomi\",\n    \"price\": 5000,\n    \"unit\": \"DOLLAR\",\n    \"picture\": \"ordinateur.png\",\n    \"region\": \"5c0d4435d9bdf750f0d89dd9\",\n    \"displayPhoneNumber\": true,\n    \"displayEmail\": false,\n    \"user\": \"5c0d6be865fbca408c7375bf\",\n    \"subCategory\": \"5c0d708b79fee5062859c26d\",\n    \"published\": true,\n    \"available\": false\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/article/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"article",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/article/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"article",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"phone\",\n    \"description\": \"nokia\",\n    \"price\": 222,\n    \"unit\": \"bon\",\n    \"picture\": \"req.body.picture\",\n    \"region\": {{region_id}},\n    \"displayPhoneNumber\": true,\n    \"displayEmail\": true,\n    \"user\": {{user_id}},\n    \"subCategory\": {{subCategory_id}},\n    \"published\": false,\n    \"available\": \"req.body.available\",\n    \"updated_at\": \"02-02-2019\"\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/article/patch/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"article",
+								"patch",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentification",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa07c50e-e7af-4c2d-b685-55abb8043afa",
+								"exec": [
+									"pm.environment.set(\"API_TOKEN\", JSON.parse(responseBody).token || '');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"value": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"momo@gmail.com\",\n\t\"password\": \"123\"\n}\n"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/user/login",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/user/me/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"me",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \n  \"token\" : \"\",\n  \"peer_page\": \"\" ,\n  \"page\" : \"1\",\n  \"order_by\" :\"\" ,\n  \"order_type\" :\"\" ,\n  \"user\" : {\n    \"email\" : \"toto00102247@yopmail.com\",\n    \"pusherChannel\" : \"channel 02-02-2018 15:25:25\",\n    \"deviceUUID\" : \"UUID 01-12-2018 15:25:25\",\n    \"password\" : \"totoksdkljlkqsjgkqsdksg5s4qgs\",\n    \"name\" : \"momo rockwel\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/user/signup",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\t\"name\": \"momo\",\n        \"phone\": \"phone\",\n        \"picture\": \"pgdd.png\",\n        \"isProfessional\": false,\n        \"role\": \"user\",\n        \"acceptChat\": true,\n        \"updated_at\": \"02-02-2019\"\n  \n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/user/patch/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"patch",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/category/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"category",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/category/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"category",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"phone\",\n    \"code\": \"xiomi\",\n    \"created_at\": {{date.now}},\n    \"updated_at\": {{Date.now}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/category/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"category",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/category/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"category",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"phone\",\n    \"code\": \"xiomi\",\n    \"updated_at\": {{Date.now}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/category/patch",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"category",
+								"patch"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SubCategory",
+			"item": [
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/sub-category/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"sub-category",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/sub-category/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"sub-category",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"phone\",\n    \"code\": \"xiomi\",\n    \"category\": {{category_ID}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/sub-category/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"sub-category",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/sub-category/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"sub-category",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"phone\",\n    \"code\": \"xiomi\",\n    \"category\": {{category_ID}},\n    \"updated_at\": \"02-02-2019\"\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/sub-category/patch",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"sub-category",
+								"patch"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "conversation",
+			"item": [
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/conversation/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"conversation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/conversation/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"conversation",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"sender\": {{user_id}},\n    \"receiver\": {{user_id}},\n    \"lastMessage\": {{message_id}},\n    \"messagesCount\": {{conversation_id}},\n    \"unreadCount\": {{Date.now}},\n    \"created_at\": {{Date.now}},\n    \"updated_at\": {{Date.now}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/conversation/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"conversation",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"sender\": {{user_id}},\n    \"receiver\": {{user_id}},\n    \"lastMessage\": {{message_id}},\n    \"messagesCount\": {{conversation_id}},\n    \"unreadCount\": {{Date.now}},\n    \"updated_at\": {{Date.now}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/conversation/patch/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"conversation",
+								"patch",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/conversation/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"conversation",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Country",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"douala\",\n    \"code\": \"524df\",\n    \"currency\": \"dgsgs\"\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/country/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"country",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"douala\",\n    \"code\": \"524df\",\n    \"currency\": \"dgsgs\"\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/country/patch",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"country",
+								"patch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/country/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"country",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{API_BASE_URL}}/country/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"country",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/country/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"country",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/message/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"message",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/message/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"message",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"phone\",\n    \"type\": \"xiomi\",\n    \"status\": 5000,\n    \"conversation\": {{conversation_id}},\n    \"sent_at\": {{Date.now}},\n    \"read_at\": \"02-02-2018\"\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/message/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"message",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"content\": \"phone\",\n    \"type\": \"xiomi\",\n    \"status\": 5000,\n    \"conversation\": {{conversation_id}},\n    \"read_at\": \"02-02-2018\"\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/message/patch/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"message",
+								"patch",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/message/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"message",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Town",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"douala\",\n    \"code\": \"524df\",\n    \"country\": {{country_ID}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/town/create",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"town",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"douala\",\n    \"code\": \"524df\",\n    \"country\": {{country_ID}}\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/town/patch/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"town",
+								"patch",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/town/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"town",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/town/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"town",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " { \n  \"token\" : \"\",\n  \"data\" : {\n      \"id\" : {{id}}\n      }\n}"
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/town/{{id}}",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"town",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
