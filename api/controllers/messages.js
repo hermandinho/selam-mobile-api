@@ -1,4 +1,6 @@
 const Message = require('../models/message');
+const Factory = require('../../helpers/conversationFactory');
+const Conversation = require('../models/conversation');
 
 
 exports.fetch =(req, res, next) => {
@@ -48,17 +50,24 @@ exports.find = (req, res, next) => {
         });
 };
 
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
+    const receiver = { _id: req.params.receiver };
+    const sender = { _id: req.userData.id };
+    const content = req.body.content;
+
+    const cv = await Factory.getConversation(receiver, sender);
+
     const message = new Message({
-        content: req.body.content,
-        type: req.body.type,
-        status: req.body.status,
-        conversation: req.body.conversation,
-        read_at: req.body.read_at
+        content: content.trim(),
+        //type: req.body.type,
+        //status: req.body.status,
+        conversation: cv._id,
+        //read_at: req.body.read_at
     });
     message.save()
         .then(result => {
             console.log(result);
+            Conversation.findOneAndUpdate(result.conversation, { lastMessage: result._id, $inc: { messagesCount: 1 } }).exec();
             res.status(201).json({
                 message: "Success",
                 data: {
