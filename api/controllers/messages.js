@@ -1,9 +1,11 @@
 const Message = require('../models/message');
+const Device = require('../models/device');
 const Factory = require('../../helpers/conversationFactory');
 const Conversation = require('../models/conversation');
+const Pusher = require('../../helpers/pusher');
 
 
-exports.fetch =(req, res, next) => {
+exports.fetch = (req, res, next) => {
     Message.find()
         .exec()
         .then(docs => {
@@ -32,6 +34,39 @@ exports.fetch =(req, res, next) => {
         });
 };
 
+exports.load = async(req, res, next) => {
+    const me = req.userData.id;
+    const you = req.params.receiver;
+    const cv = await Factory.getConversation({ _id: me }, { _id: you});
+
+    Message.find({ conversation: cv._id })
+    .then(data => {
+        res.status(200).json(data);
+        /*res.status(200).json({
+            count: docs.length,
+            message: docs.map(doc => {
+                return {
+                    content: doc.content,
+                    type: doc.type,
+                    status: doc.status,
+                    conversation: doc.conversation,
+                    sent_at: doc.sent_at,
+                    read_at: doc.read_at,
+                    request: {
+                        type: "GET",
+                        url: "http://localhost:5000/api/v1/message/" + doc._id
+                    }
+                };
+            })
+        });*/
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: err
+        });
+    });
+};
+
 exports.find = (req, res, next) => {
     Message.findById(req.params.id)
         .exec()
@@ -41,7 +76,7 @@ exports.find = (req, res, next) => {
                     message: "Message  not found"
                 });
             }
-            res.status(200).json({ message });
+            res.status(200).json({message});
         })
         .catch(err => {
             res.status(500).json({
@@ -50,35 +85,31 @@ exports.find = (req, res, next) => {
         });
 };
 
-exports.create = async (req, res, next) => {
-    const receiver = { _id: req.params.receiver };
-    const sender = { _id: req.userData.id };
+exports.send = async (req, res, next) => {
+    const receiver = {_id: req.params.receiver};
+    const sender = {_id: req.userData.id};
     const content = req.body.content;
 
-    const cv = await Factory.getConversation(receiver, sender);
+    const cv = await Factory.getConversation(sender, receiver);
+    const devices = await Device.find({user: receiver._id});
 
     const message = new Message({
+        trigger: sender._id,
         content: content.trim(),
+        conversation: cv._id,
         //type: req.body.type,
         //status: req.body.status,
-        conversation: cv._id,
         //read_at: req.body.read_at
     });
     message.save()
-        .then(result => {
-            console.log(result);
-            Conversation.findOneAndUpdate(result.conversation, { lastMessage: result._id, $inc: { messagesCount: 1 } }).exec();
-            res.status(201).json({
-                message: "Success",
-                data: {
-                    _id: result._id,
-                    content: result.content,
-                    type: result.type,
-                    status: result.status,
-                    conversation: result.conversation,
-                    read_at: result.read_at
-                }
+        .then(data => {
+
+            devices.map(d => {
+                Pusher.trigger(d.pusherChannel, 'message', data);
             });
+
+            Conversation.findOneAndUpdate(data.conversation, {lastMessage: data._id, $inc: {messagesCount: 1}}).exec();
+            res.status(201).json(data);
         })
         .catch(err => {
             console.log(err);
@@ -88,7 +119,7 @@ exports.create = async (req, res, next) => {
         });
 };
 exports.delete = (req, res, next) => {
-    Message.remove({ _id: req.params.id })
+    Message.remove({_id: req.params.id})
         .exec()
         .then(result => {
             res.status(200).json({

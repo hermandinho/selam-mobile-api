@@ -35,14 +35,19 @@ exports.fetch =(req, res, next) => {
 
 exports.find = (req, res, next) => {
     Article.findById(req.params.id)
+        .populate([
+            { path: 'user', select: 'name acceptChats acceptPhone phoneNumber acceptSMS' },
+            { path: 'subCategory', select: 'name', populate: { path: 'category', model: 'Category', select: 'name' } },
+            { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
+        ])
         .exec()
-        .then(article => {
-            if (!article) {
+        .then(doc => {
+            if (!doc) {
                 return res.status(404).json({
                     message: "article  not found"
                 });
             }
-            res.status(200).json({ article });
+            res.status(200).json(doc);
         })
         .catch(err => {
             res.status(500).json({

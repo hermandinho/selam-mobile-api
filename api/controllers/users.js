@@ -112,7 +112,7 @@ exports.me = (req, res, next) => {
 
 exports.create = (req, res, next) => {
     User.findByIdAndUpdate(req.params.id, {name: req.body.name,
-        phone: req.body.phone,
+        phoneNumber: req.body.phone,
         picture: req.body.picture,
         isProfessional: req.body.isProfessional,
         role: req.body.role,
