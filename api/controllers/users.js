@@ -7,6 +7,7 @@ const Pusher = require('../../helpers/pusher');
 
 const manageDevice = async (uid, params) => {
     params.user = uid;
+    if (!params.uuid) return Promise.reject(false);
     let check = await Device.findOne({ user: uid, uuid: params.uuid }).exec();
     let device;
     if (check && check._id) {
@@ -14,7 +15,7 @@ const manageDevice = async (uid, params) => {
     } else {
         device = await new Device(params).save();
     }
-    Promise.resolve(device)
+    return Promise.resolve(device)
 };
 
 exports.login = (req, res, next) => {
@@ -126,6 +127,15 @@ exports.create = (req, res, next) => {
         }
         res.send({state: "Success"})
     })
+};
+
+exports.logout = async (req, res, next) => {
+    await Device.remove({ user: req.userData.id }).exec().then(result => {
+        res.status(200).json({
+            message: "Success"
+        })
+    })
+
 };
 
 exports.emitTypingMessage = async (req, res, next) => {
