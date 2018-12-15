@@ -1,7 +1,9 @@
 const User = require('../models/user');
 const Device = require('../models/device');
+const Conversation = require('../models/conversation');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const Pusher = require('../../helpers/pusher');
 
 const manageDevice = async (uid, params) => {
     params.user = uid;
@@ -112,7 +114,7 @@ exports.me = (req, res, next) => {
 
 exports.create = (req, res, next) => {
     User.findByIdAndUpdate(req.params.id, {name: req.body.name,
-        phone: req.body.phone,
+        phoneNumber: req.body.phone,
         picture: req.body.picture,
         isProfessional: req.body.isProfessional,
         role: req.body.role,
@@ -124,4 +126,14 @@ exports.create = (req, res, next) => {
         }
         res.send({state: "Success"})
     })
+};
+
+exports.emitTypingMessage = async (req, res, next) => {
+    const status = req.params.status;
+    const me = req.userData;
+    const devices = await Device.find({user: req.query.to});
+    devices.map(d => {
+        Pusher.trigger(d.pusherChannel, 'typing', { status: status === 'true', user: me.id });
+    });
+    res.status(200).json();
 };
