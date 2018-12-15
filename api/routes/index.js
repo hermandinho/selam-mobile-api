@@ -26,6 +26,7 @@ module.exports = (app) => {
 
     // DB seeding
     app.use('/api/v1/seed', require('../../seeder').seed)
+    app.use('/api/v1/faker', require('../../facker').fake)
 
     // PUSHER
     app.post('/api/v1/pusher/auth', (req, res, next) => {
