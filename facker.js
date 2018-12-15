@@ -85,7 +85,7 @@ const fakeArticles = async (regions, subCats) => {
             title: faker.lorem.sentence(),
             description: faker.lorem.paragraph(),
             price: {
-                amount: faker.random.number(),
+                amount: faker.random.number(50000),
                 fixed: faker.random.boolean()
             },
             currency: 'CFA',
