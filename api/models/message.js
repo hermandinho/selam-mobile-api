@@ -8,7 +8,7 @@ const messageSchema = mongoose.Schema({
     type: { type: String, required: true, default: messageTypes.TEXT },
     status: { type: String, required: true, default: messageStatus.RECEIVED },
     conversation: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation", required: true },
-    trigger: { type: String, required: true },
+    trigger: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     sent_at: { type: Date, default: Date.now },
     read_at: { type: Date, default: null }
 });

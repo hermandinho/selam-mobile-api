@@ -2,28 +2,21 @@ const Conversation = require('../models/conversation');
 const Factory = require('../../helpers/conversationFactory')
 
 
-exports.fetch =(req, res, next) => {
-    Conversation.find()
-        .exec()
-        .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                conversation: docs.map(doc => {
-                    return {
-                        sender: doc.sender,
-                        receiver: doc.receiver,
-                        lastMessage: doc.lastMessage,
-                        messagesCount: doc.messagesCount,
-                        unreadCount: doc.unreadCount,
-                        created_at: doc.created_at,
-                        updated_at: doc.updated_at,
-                        request: {
-                            type: "GET",
-                            url: "http://localhost:5000/api/v1/conversation/" + doc._id
-                        }
-                    };
-                })
-            });
+exports.fetch = (req, res, next) => {
+    const me = req.userData.id;
+    Conversation.find({ lastMessage: { $ne: null },
+        $or: [
+            {sender: me},
+            {receiver: me},
+        ]
+    }).populate([
+        { path: 'lastMessage', select: 'type content status trigger sent_at', populate: { path: 'trigger', select: 'name picture' } },
+        { path: 'sender', select: 'name picture' },
+        { path: 'receiver', select: 'name picture' },
+    ])
+    .exec()
+        .then(data => {
+            res.status(200).json(data);
         })
         .catch(err => {
             res.status(500).json({
@@ -41,7 +34,7 @@ exports.find = (req, res, next) => {
                     message: "Conversation  not found"
                 });
             }
-            res.status(200).json({ conversation });
+            res.status(200).json({conversation});
         })
         .catch(err => {
             res.status(500).json({
@@ -83,7 +76,7 @@ exports.create = (req, res, next) => {
         });
 };
 exports.delete = (req, res, next) => {
-    Conversation.remove({ _id: req.params.id })
+    Conversation.remove({_id: req.params.id})
         .exec()
         .then(result => {
             res.status(200).json({

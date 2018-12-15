@@ -24,18 +24,30 @@ module.exports = (app) => {
     app.use('/api/v1/message', messageRoutes);
 
 
-
-
     // DB seeding
     app.use('/api/v1/seed', require('../../seeder').seed)
 
-
+    // PUSHER
+    app.post('/api/v1/pusher/auth', (req, res, next) => {
+        console.log('CALLED PUSHER AUTH')
+        let socketId = req.body.socket_id;
+        let channel = req.body.channel_name;
+        let presenceData = {
+            user_id: 'unique_user_id',
+            user_info: {
+                name: 'Mr Channels',
+                twitter_id: '@pusher'
+            }
+        };
+        let auth = Pusher.instance().authenticate(socketId, channel, presenceData);
+        res.send(auth);
+    });
     app.use('/api/v1/pusher', (req, res, next) => {
            Pusher.trigger('my-channel', 'my-event', {
             "message": "Message from server"
           });
           res.status(200).json({});
-    })
+    });
 
     app.use('/api/v1/factory', async (req, res, next) => {
         const u1 = {_id: "5c0d488dc07af64ca80fdaf4"};
