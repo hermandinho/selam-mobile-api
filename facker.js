@@ -93,8 +93,8 @@ const fakeArticles = async (regions, subCats) => {
             region: regions[faker.random.number(regions.length - 1)], // TODO
             user: userIds[faker.random.number(userIds.length - 1)],
             subCategory: subCats[faker.random.number(subCats.length - 1)],
-            published: faker.random.boolean() || true,
-            available: faker.random.boolean(),
+            published: /*faker.random.boolean() || */true,
+            available: /*faker.random.boolean()*/ true,
             exchange: faker.random.boolean()
         })
     }
