@@ -147,3 +147,9 @@ exports.emitTypingMessage = async (req, res, next) => {
     });
     res.status(200).json();
 };
+
+exports.upload = async (req, res, next) => {
+    // TODO update path to absolute URL
+    let user = await User.findOneAndUpdate({_id: req.params.id}, { picture: process.env.APP_URL + '/' + req.file.path });
+    res.status(200).json({ message: 'Ok' });
+};

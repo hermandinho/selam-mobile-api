@@ -6,12 +6,16 @@ exports.fetch =(req, res, next) => {
     let dateSort = parseInt(req.query.dateSort) || 1;
     let priceSort = parseInt(req.query.priceSort) || -1;
     let regionFilter = req.query.region || '';
+    let query = req.query.search || '';
+    
 
     // TODO add query param to check if to apply available && published filters
     let search = {published: true, available: true};
     if (regionFilter.trim().length) {
         search['region'] = regionFilter.split(',');
     }
+
+
 
     Article.paginate(search,
         {

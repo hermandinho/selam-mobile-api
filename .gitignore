@@ -6,3 +6,5 @@ npm-debug.log
 .idea
 /uploads/articles/*
 !/uploads/articles/.gitignore
+/uploads/users/*
+!/uploads/users/.gitignore
