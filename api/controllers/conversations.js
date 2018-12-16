@@ -1,21 +1,28 @@
 const Conversation = require('../models/conversation');
+const Message = require('../models/message');
 const Factory = require('../../helpers/conversationFactory')
 
 
 exports.fetch = (req, res, next) => {
     const me = req.userData.id;
-    Conversation.find({ lastMessage: { $ne: null },
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+    let search = req.query.search || '';
+
+    Conversation.paginate({ lastMessage: { $ne: null },
         $or: [
             {sender: me},
             {receiver: me},
         ]
-    }).populate([
-        { path: 'lastMessage', select: 'type content status trigger sent_at', populate: { path: 'trigger', select: 'name picture' } },
-        { path: 'sender', select: 'name picture' },
-        { path: 'receiver', select: 'name picture' },
-    ])
-    .exec()
-        .then(data => {
+    }, {
+        page, limit,
+        sort: { updated_at: -1 },
+        populate: [
+             { path: 'lastMessage', select: 'type content status trigger sent_at', populate: { path: 'trigger', select: 'name picture' } },
+             { path: 'sender', select: 'name picture' },
+             { path: 'receiver', select: 'name picture' },
+         ]
+    }).then(data => {
             res.status(200).json(data);
         })
         .catch(err => {
@@ -76,9 +83,11 @@ exports.create = (req, res, next) => {
         });
 };
 exports.delete = (req, res, next) => {
-    Conversation.remove({_id: req.params.id})
+    const ids = req.params.id.split(',');
+    Conversation.remove({_id: { $in: ids } })
         .exec()
         .then(result => {
+            Message.remove({ conversation: { $in: ids } }).exec();
             res.status(200).json({
                 message: "Success"
             });

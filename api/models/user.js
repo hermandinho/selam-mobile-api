@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema({
     acceptChats: { type: Boolean, default: true },
     acceptPhone: { type: Boolean, default: true },
     acceptSMS: { type: Boolean, default: true },
+    acceptEmail: { type: Boolean, default: true },
     deviceUUID: { type: String },
     device: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Device' },
     created_at: { type: Date, default: Date.now },

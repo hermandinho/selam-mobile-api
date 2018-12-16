@@ -15,7 +15,7 @@ const upload = multer({ storage: storage })
 
 const userController = require('../controllers/users');
 
-router.patch('/:id', userController.create);
+router.patch('/:id', userController.update);
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.get('/me/:id', checkAuth, userController.me);

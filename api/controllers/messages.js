@@ -103,12 +103,11 @@ exports.send = async (req, res, next) => {
     });
     message.save()
         .then(data => {
-
             devices.map(d => {
                 Pusher.trigger(d.pusherChannel, 'message', data);
             });
+            Conversation.findOneAndUpdate({_id: cv._id}, {lastMessage: data._id, $inc: {messagesCount: 1}}).exec();
 
-            Conversation.findOneAndUpdate(data.conversation, {lastMessage: data._id, $inc: {messagesCount: 1}}).exec();
             res.status(201).json(data);
         })
         .catch(err => {

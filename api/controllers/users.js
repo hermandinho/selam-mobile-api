@@ -113,19 +113,19 @@ exports.me = (req, res, next) => {
 };
 
 
-exports.create = (req, res, next) => {
-    User.findByIdAndUpdate(req.params.id, {name: req.body.name,
+exports.update = (req, res, next) => {
+    User.findByIdAndUpdate(req.params.id, req.body/*{name: req.body.name,
         phoneNumber: req.body.phone,
         picture: req.body.picture,
         isProfessional: req.body.isProfessional,
         role: req.body.role,
         acceptChat: req.body.acceptChat,
         updated_at: req.body.updated_at
-    }, {new: true}, function (err) {
+    }*/, {new: true}, function (err, data) {
         if (err) {
             res.send({state: "erreur update User"})
         }
-        res.send({state: "Success"})
+        res.send(data)
     })
 };
 
