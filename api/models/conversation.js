@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 
 const conversationSchema = mongoose.Schema({
     sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -10,4 +11,5 @@ const conversationSchema = mongoose.Schema({
     updated_at: { type: Date, default: Date.now }
 });
 
+conversationSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Conversation', conversationSchema);

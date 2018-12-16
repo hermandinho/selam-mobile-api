@@ -20,9 +20,9 @@ exports.instance = () => {
 };
 
 exports.init = () => {   
-      getInstance().trigger('my-channel', 'my-event', {
+      /*getInstance().trigger('my-channel', 'my-event', {
         "message": "Server On !!"
-      });
+      });*/
 };
 
 exports.Pusher = () => {

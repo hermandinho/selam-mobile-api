@@ -95,7 +95,8 @@ const fakeArticles = async (regions, subCats) => {
             subCategory: subCats[faker.random.number(subCats.length - 1)],
             published: /*faker.random.boolean() || */true,
             available: /*faker.random.boolean()*/ true,
-            exchange: faker.random.boolean()
+            exchange: faker.random.boolean(),
+            updated_at: faker.date.between('2015-01-01', '2018-12-16')
         })
     }
     Article.insertMany(articlesData);
@@ -130,7 +131,7 @@ exports.fake = async (req, res, next) => {
     fakeUsers();
     setTimeout (() => {
         fakeRegions();
-    }, 4500);
+    }, 5500);
 
     res.status(200).json({message: 'ALL OK'});
 };
