@@ -6,14 +6,20 @@ exports.fetch =(req, res, next) => {
     let dateSort = parseInt(req.query.dateSort) || 1;
     let priceSort = parseInt(req.query.priceSort) || -1;
     let regionFilter = req.query.region || '';
+    let fixedPrice = req.query.hasOwnProperty('priceFixed') ? req.query.priceFixed : null;
+    let exchange = req.query.hasOwnProperty('exchange') ? req.query.exchange : null;
     let query = req.query.search || '';
 
     let search = {published: true, available: true};
+    let sort = {};
 
     if (regionFilter.trim().length) {
         search['region'] = regionFilter.split(',');
     }
-
+    if (fixedPrice !== null)
+        search['price.fixed'] = fixedPrice;
+    if (exchange !== null)
+        search['exchange'] = exchange;
     if (query.length) {
         query = '.*' + query + '.*';
         search['$or'] = [
@@ -22,10 +28,15 @@ exports.fetch =(req, res, next) => {
         ];
     }
 
+    if (priceSort)
+        sort['price.amount'] = priceSort;
+    if (dateSort)
+        sort['updated_at'] = dateSort;
+
     Article.paginate(search,
         {
             page: page, limit: limit,
-            sort: { updated_at: dateSort, 'price.amount': priceSort },
+            sort: sort,
             populate: [
                 { path: 'user', select: 'name' },
                 { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
