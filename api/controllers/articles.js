@@ -7,15 +7,20 @@ exports.fetch =(req, res, next) => {
     let priceSort = parseInt(req.query.priceSort) || -1;
     let regionFilter = req.query.region || '';
     let query = req.query.search || '';
-    
 
-    // TODO add query param to check if to apply available && published filters
     let search = {published: true, available: true};
+
     if (regionFilter.trim().length) {
         search['region'] = regionFilter.split(',');
     }
 
-
+    if (query.length) {
+        query = '.*' + query + '.*';
+        search['$or'] = [
+            { title: { $regex: query, $options: 'is' } },
+            { description: { $regex: query, $options: 'is' } },
+        ];
+    }
 
     Article.paginate(search,
         {
