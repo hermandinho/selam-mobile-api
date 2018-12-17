@@ -90,7 +90,7 @@ exports.create = (req, res, next) => {
         exchange: req.body.exchange,
         published: true, //req.body.published, // TODO set to false if articles are to be validated before publishing
         available: true, //req.body.available,
-        pictures: pictures
+        // pictures: pictures
 
     }).save()
         .then(data => {
@@ -144,7 +144,7 @@ exports.patch = (req, res, next) => {
 }
 
 exports.upload = async (req, res, next) => {
-    //console.log(req.file, req.params.id);
+    console.log(req.file +' -> '+ req.params.id);
     // TODO update path to absolute URL
     let article = await Article.findOneAndUpdate({_id: req.params.id}, { $push: { pictures: process.env.APP_URL + '/' + req.file.path } });
     res.status(200).json({ message: 'Ok' });
