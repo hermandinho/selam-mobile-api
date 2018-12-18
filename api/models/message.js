@@ -9,6 +9,8 @@ const messageSchema = mongoose.Schema({
     status: { type: String, required: true, default: messageStatus.RECEIVED },
     conversation: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation", required: true },
     trigger: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    deleted_by_1: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, default: null },
+    deleted_by_2: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, default: null },
     sent_at: { type: Date, default: Date.now },
     read_at: { type: Date, default: null }
 });

@@ -14,7 +14,8 @@ exports.fetch =(req, res, next) => {
     let sort = {};
 
     if (regionFilter.trim().length) {
-        search['region'] = regionFilter.split(',');
+        // TODO why not $in ?
+        search['region'] = { $in: regionFilter.split(',') };
     }
     if (fixedPrice !== null)
         search['price.fixed'] = fixedPrice;
