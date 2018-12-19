@@ -4,7 +4,10 @@ npm-debug.log
 .env
 .DS_Store
 .idea
-/uploads/articles/*
-!/uploads/articles/.gitignore
+/uploads/articles/*.jpg
+/uploads/articles/*.png
+/uploads/articles/*.jpeg
+/uploads/articles/ok/*
+!/uploads/articles/ok/.gitignore
 /uploads/users/*
 !/uploads/users/.gitignore
