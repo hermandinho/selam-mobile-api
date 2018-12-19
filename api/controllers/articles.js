@@ -1,3 +1,5 @@
+const sharp = require('sharp');
+const fs = require('fs');
 const Article = require('../models/article');
 
 exports.fetch =(req, res, next) => {
@@ -156,8 +158,23 @@ exports.patch = (req, res, next) => {
 }
 
 exports.upload = async (req, res, next) => {
-    console.log(req.file +' -> '+ req.params.id);
-    // TODO update path to absolute URL
-    let article = await Article.findOneAndUpdate({_id: req.params.id}, { $push: { pictures: process.env.APP_URL + '/' + req.file.path } });
+    // console.log(req.file);
+    let random = req.file.destination + '/' + [...Array(60)].map(() => Math.random().toString(36)[3]).join('');
+    let ext =  req.file.path.split('.');
+    ext = ext[ext.length - 1];
+    random += '.' + ext;
+    sharp(req.file.path).resize(512, 512).toFile(random).then(res => {
+        Article.findOneAndUpdate({_id: req.params.id}, { $push: { pictures: process.env.APP_URL + '/' + random } }).then(res => {
+            setTimeout(() => {
+                try {
+                    fs.unlinkSync(req.file.path);
+                } catch (err) {
+                    console.log('COULD NOT DELETE FILE ' + req.file.path, err)
+                    // handle the error
+                }
+            }, 15000);
+        });
+    });
+
     res.status(200).json({ message: 'Ok' });
 };
