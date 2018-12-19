@@ -159,20 +159,27 @@ exports.patch = (req, res, next) => {
 
 exports.upload = async (req, res, next) => {
     // console.log(req.file);
-    let random = req.file.destination + '/' + [...Array(60)].map(() => Math.random().toString(36)[3]).join('');
+    let random = req.file.destination.replace('./', '') + '/ok/' + [...Array(60)].map(() => Math.random().toString(36)[3]).join('');
     let ext =  req.file.path.split('.');
     ext = ext[ext.length - 1];
     random += '.' + ext;
-    sharp(req.file.path).resize(512, 512).toFile(random).then(res => {
+    sharp(req.file.path).rotate().resize(1024, 800,{
+        kernel: sharp.kernel.nearest,
+        fit: sharp.fit.contain,
+        position: 'center',
+        background: { r: 255, g: 205, b: 195, alpha: 0.5 }
+    }).toFile(random).then(res => {
         Article.findOneAndUpdate({_id: req.params.id}, { $push: { pictures: process.env.APP_URL + '/' + random } }).then(res => {
+            // TODO create CRON to unlink files
             setTimeout(() => {
                 try {
                     fs.unlinkSync(req.file.path);
+                    console.log(req.file.path + ' successfully unlinked !!!');
                 } catch (err) {
                     console.log('COULD NOT DELETE FILE ' + req.file.path, err)
                     // handle the error
                 }
-            }, 15000);
+            }, (1000 * 60 * 10));
         });
     });
 
