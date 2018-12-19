@@ -84,6 +84,27 @@ exports.create = (req, res, next) => {
 };
 exports.delete = (req, res, next) => {
     const ids = req.params.id.split(',');
+    const me = req.userData;
+
+    /*Message.find({ conversation: { $in: ids } })
+    .then(res => {
+        res.map(m => {
+            if (!m.deleted_by_1) {
+                m.deleted_by_1 = me.id;
+            } else if (!m.deleted_by_2) {
+                if (m.deleted_by_1 != me.id) {
+                    m.deleted_by_2 = me.id;
+                } else {
+                    console.log(m.conversation + ' already deleted for user ' + me.id);
+                }
+            }
+           m.save();
+        });
+        return  res.status(200).json({data: res});
+    }).catch(err => {
+        return res.status(500).json(err);
+    });*/
+
     Conversation.remove({_id: { $in: ids } })
         .exec()
         .then(result => {
