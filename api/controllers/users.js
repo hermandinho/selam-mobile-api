@@ -62,10 +62,13 @@ exports.signup = async (req, res, next) => {
                     } else {
                         const user = new User({
                             email: req.body.email,
-                            pusherChannel: req.body.pusherChannel || 'channel-' + (new Date).getTime(),
-                            deviceUUID: req.body.uuid || 'UUID-'  + (new Date).getTime(),
+                            //pusherChannel: req.body.pusherChannel || 'channel-' + (new Date).getTime(),
+                            //deviceUUID: req.body.uuid || 'UUID-'  + (new Date).getTime(),
                             password: hash,
-                            name: req.body.name
+                            name: req.body.name,
+                            phoneNumber: req.body.phoneNumber || null,
+                            acceptSMS: req.body.phoneNumber && req.body.phoneNumber.length > 0,
+                            acceptPhone: req.body.phoneNumber && req.body.phoneNumber.length > 0,
                         }).save().then(u => {
                             const token = jwt.sign({ email: u.email, id: u._id }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
                             manageDevice(u._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
@@ -112,16 +115,8 @@ exports.me = (req, res, next) => {
         });
 };
 
-
 exports.update = (req, res, next) => {
-    User.findByIdAndUpdate(req.params.id, req.body/*{name: req.body.name,
-        phoneNumber: req.body.phone,
-        picture: req.body.picture,
-        isProfessional: req.body.isProfessional,
-        role: req.body.role,
-        acceptChat: req.body.acceptChat,
-        updated_at: req.body.updated_at
-    }*/, {new: true}, function (err, data) {
+    User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, data) {
         if (err) {
             res.send({state: "erreur update User"})
         }

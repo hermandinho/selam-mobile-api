@@ -174,7 +174,9 @@ const fakeArticles = async (regions, subCats) => {
             updated_at: faker.date.between('2015-01-01', '2018-12-16')
         })
     }
-    Article.insertMany(articlesData);
+    Article.insertMany(articlesData).then(res => {
+        console.log('ARTICLES INSERTED.');
+    });
 };
 
 const fakeRegions = async () => {
@@ -188,12 +190,12 @@ const fakeRegions = async () => {
             const ids = []
             docs.map(d => {
                 ids.push(d._id)
-                fakeCategories().then(cats => {
-                    fakeSubCategories(cats).then(sc => {
-                        const scIds = [];
-                        sc.map(s => scIds.push(s._id))
-                        fakeArticles(ids, scIds);
-                    });
+            });
+            fakeCategories().then(cats => {
+                fakeSubCategories(cats).then(sc => {
+                    const scIds = [];
+                    sc.map(s => scIds.push(s._id))
+                    fakeArticles(ids, scIds);
                 });
             });
         });
