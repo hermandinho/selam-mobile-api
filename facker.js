@@ -206,6 +206,6 @@ exports.fake = async (req, res, next) => {
     fakeUsers();
     setTimeout (() => {
         fakeRegions();
-    }, 10000);
+    }, 30000);
     res.status(200).json({message: 'ALL OK'});
 };
