@@ -13,7 +13,7 @@ exports.fetch =(req, res, next) => {
     let query = req.query.search || '';
 
     let search = {published: true, available: true};
-    let sort = {};
+    let sort = {updated_at: -1};
 
     if (regionFilter.trim().length) {
         // TODO why not $in ?
