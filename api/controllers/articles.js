@@ -179,7 +179,7 @@ exports.upload = async (req, res, next) => {
                     console.log('COULD NOT DELETE FILE ' + req.file.path, err)
                     // handle the error
                 }
-            }, (1000 * 60 * 10));
+            }, (1000 * 60 * 1));
         });
     });
 
