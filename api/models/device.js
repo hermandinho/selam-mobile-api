@@ -6,6 +6,7 @@ const deviceSchema = mongoose.Schema({
     version: { type: String, required: false },
     uuid: { type: String, required: true },
     pusherChannel: { type: String, required: false },
+    pushToken: { type: String, required: false },
     enabled: { type: Boolean, required: false, default: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     lastOnline: { type: Date, default: Date.now },

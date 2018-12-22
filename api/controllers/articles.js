@@ -1,5 +1,7 @@
 const sharp = require('sharp');
 const fs = require('fs');
+const NotificationManager = require('../../helpers/notifications');
+
 const Article = require('../models/article');
 
 exports.fetch =(req, res, next) => {
@@ -70,6 +72,9 @@ exports.find = (req, res, next) => {
                     message: "article  not found"
                 });
             }
+            if (doc._id !== req.userData.id) {
+                NotificationManager.trigger(NotificationManager.EVENTS.NEW_VISIT, { user: req.userData, article: doc });
+            }
             res.status(200).json(doc);
         })
         .catch(err => {
@@ -108,6 +113,7 @@ exports.create = (req, res, next) => {
 
     }).save()
         .then(data => {
+            NotificationManager.trigger(NotificationManager.EVENTS.NEW_ARTICLE, data);
             res.status(201).json(data);
         })
         .catch(err => {
