@@ -18,6 +18,7 @@ const userController = require('../controllers/users');
 router.patch('/:id', userController.update);
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
+router.patch('/push-token/set', checkAuth, userController.setDevicePushToken);
 router.get('/me/:id', checkAuth, userController.me);
 router.get('/:cid/:status/typing', checkAuth, userController.emitTypingMessage);
 router.post('/logout', checkAuth, userController.logout);

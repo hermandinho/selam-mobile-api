@@ -3,7 +3,7 @@ const Device = require('../models/device');
 const Factory = require('../../helpers/conversationFactory');
 const Conversation = require('../models/conversation');
 const Pusher = require('../../helpers/pusher');
-
+const NotificationManager = require('../../helpers/notifications');
 
 exports.fetch = (req, res, next) => {
     Message.find()
@@ -106,7 +106,9 @@ exports.send = async (req, res, next) => {
             devices.map(d => {
                 Pusher.trigger(d.pusherChannel, 'message', data);
             });
-            Conversation.findOneAndUpdate({_id: cv._id}, {lastMessage: data._id, $inc: {messagesCount: 1}}).exec();
+            Conversation.findOneAndUpdate({_id: cv._id}, {lastMessage: data._id, $inc: {messagesCount: 1}}, {new: true}).exec().then(cv => {
+                NotificationManager.trigger(NotificationManager.EVENTS.NEW_MESSAGE, { from: sender, to: receiver });
+            });
 
             res.status(201).json(data);
         })

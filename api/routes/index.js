@@ -9,8 +9,10 @@ const  conversationRoutes = require('./conversation');
 const  messageRoutes = require('./message');
 const CVFactory = require('../../helpers/conversationFactory')
 const User = require('../models/user')
+const Device = require('../models/device')
 
 const Pusher = require('../../helpers/pusher')
+const FCM = require('../../helpers/firebase')
 
 module.exports = (app) => {
     app.use('/api/v1/user', userRoutes);
@@ -47,6 +49,14 @@ module.exports = (app) => {
            Pusher.trigger('my-channel', 'my-event', {
             "message": "Message from server"
           });
+          res.status(200).json({});
+    });
+
+    app.use('/api/v1/push', async (req, res, next) => {
+           const devices = await Device.find({ pushToken: { $ne: null } });
+           devices.map(d => {
+              FCM.send(d.pushToken, {title: 'TEST', body: 'Hello world'}, null);
+           });
           res.status(200).json({});
     });
 

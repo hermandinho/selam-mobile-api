@@ -124,6 +124,15 @@ exports.update = (req, res, next) => {
     })
 };
 
+exports.setDevicePushToken = async (req, res, next) => {
+    const device = await Device.findOne({ uuid: req.body.uuid, user: req.userData.id }).exec();
+    if (device && device.pushToken !== req.body.pushToken) {
+        device.pushToken = req.body.pushToken;
+        device.save();
+    }
+    return res.status(200).json({ message: 'Push Token set.' });
+};
+
 exports.logout = async (req, res, next) => {
     await Device.remove({ user: req.userData.id }).exec().then(result => {
         res.status(200).json({
