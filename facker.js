@@ -6,6 +6,8 @@ const Country = require('./api/models/country');
 const Town = require('./api/models/town');
 const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
+const Conversation = require('./api/models/conversation');
+const Message = require('./api/models/message');
 
 const customFakes = {
     CATEGORIES: {
@@ -92,6 +94,8 @@ const clearModels = async() => {
     await SubCategory.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
     await Category.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
     await Article.deleteMany({ title: /[a-zA-Z0-9]/ }, function (err) {});
+    await Message.deleteMany({ content: /[a-zA-Z0-9]/ }, function (err) {});
+    await Conversation.deleteMany({ _id: { $ne: null } }, function (err) {});
     await User.deleteMany({ role: 'faker' }, function (err) {});
     return Promise.resolve();
 };
@@ -209,5 +213,10 @@ exports.fake = async (req, res, next) => {
     setTimeout (() => {
         fakeRegions();
     }, 30000);
+    res.status(200).json({message: 'ALL OK'});
+};
+
+exports.clear = async (req, res, next) => {
+    await clearModels();
     res.status(200).json({message: 'ALL OK'});
 };

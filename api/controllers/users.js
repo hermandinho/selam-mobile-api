@@ -11,7 +11,16 @@ const manageDevice = async (uid, params) => {
     let check = await Device.findOne({ user: uid, uuid: params.uuid }).exec();
     let device;
     if (check && check._id) {
-        device = await Device.findOneAndUpdate({ user: uid, uuid: params.uuid }, { $set: { lastOnline: new Date(), updated_at: new Date() } });
+        device = await Device.findOneAndUpdate({
+            user: uid,
+            uuid: params.uuid
+        }, {
+            $set: {
+                lastOnline: new Date(),
+                updated_at: new Date(),
+                pushToken: params.pushToken || null
+            }
+        });
     } else {
         device = await new Device(params).save();
     }
@@ -30,7 +39,7 @@ exports.login = (req, res, next) => {
                 }
                 if (r) {
                     const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
-                    manageDevice(user._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
+                    manageDevice(user._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type, pushToken: req.body.pushToken }).then(d => {
                         console.log('DEVICE MANAGED');
                     });
                     return res.status(200).json({
@@ -71,7 +80,7 @@ exports.signup = async (req, res, next) => {
                             acceptPhone: req.body.phoneNumber && req.body.phoneNumber.length > 0,
                         }).save().then(u => {
                             const token = jwt.sign({ email: u.email, id: u._id }, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRE_DURATION });
-                            manageDevice(u._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type }).then(d => {
+                            manageDevice(u._id, { uuid: req.body.uuid, pusherChannel: req.body.pusherChannel, version: req.body.version, os: req.body.os, type: req.body.type, pushToken: req.body.pushToken }).then(d => {
                                 console.log('DEVICE MANAGED');
                             });
                             res.status(201).json({
