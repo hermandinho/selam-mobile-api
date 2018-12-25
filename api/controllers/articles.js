@@ -61,7 +61,7 @@ exports.fetch =(req, res, next) => {
 exports.find = (req, res, next) => {
     Article.findById(req.params.id)
         .populate([
-            { path: 'user', select: 'name acceptChats acceptPhone phoneNumber acceptSMS' },
+            { path: 'user', select: '_id name acceptChats acceptPhone phoneNumber acceptSMS' },
             { path: 'subCategory', select: 'name', populate: { path: 'category', model: 'Category', select: 'name' } },
             { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
         ])
