@@ -51,7 +51,7 @@ exports.trigger = async (event, data) => {
             const visitor = await User.findOne({ _id: data.user.id}).exec();
             TITLE = 'Nouvelle visite';
             MESSAGE = `${visitor.name} a visiter votre article ${data.article.title}`;
-            if (visitor._id != data.article.user) {
+            if (visitor._id != data.article.user._id) {
                 users = await User.find({_id: data.article.user._id, notifyOnArticleVisite: true}).exec();
             }
             break;
