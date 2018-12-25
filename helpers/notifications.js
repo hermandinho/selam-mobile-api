@@ -7,7 +7,6 @@ const SubCategory = require('../api/models/subCategory');
 
 let TITLE = '';
 let MESSAGE = '';
-let EVENT = '';
 
 const NOTIFICATION_EVENTS = {
     NEW_ARTICLE: 'article',
@@ -21,9 +20,8 @@ exports.EVENTS = NOTIFICATION_EVENTS;
 // data = {from: {_id}, to: {_id}} object for NEW_MESSAGE
 // data = { user, article } object for NEW_VISIT
 exports.trigger = async (event, data) => {
-    MESSAGE = '';
-    EVENT = event;
     // TODO validate data with the above rules to prevent errors
+    MESSAGE = '';
     let users = [];
     switch (event) {
         case NOTIFICATION_EVENTS.NEW_ARTICLE:
@@ -53,14 +51,16 @@ exports.trigger = async (event, data) => {
             const visitor = await User.findOne({ _id: data.user.id}).exec();
             TITLE = 'Nouvelle visite';
             MESSAGE = `${visitor.name} a visiter votre article ${data.article.title}`;
-            users = await User.find({_id: data.article.user._id, notifyOnArticleVisite: true}).exec();
+            if (visitor._id != data.article.user) {
+                users = await User.find({_id: data.article.user._id, notifyOnArticleVisite: true}).exec();
+            }
             break;
     }
     //console.log(users);
     users.map(u => {
        Device.find({ user: u._id, pushToken: { $ne: null } }).exec().then(devices => {
            devices.map(d => {
-               FCM.send(d.pushToken, { title: TITLE, body: MESSAGE, event: EVENT });
+               FCM.send(d.pushToken, { title: TITLE, body: MESSAGE, event: event });
            })
        });
     });
