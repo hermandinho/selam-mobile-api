@@ -173,7 +173,7 @@ exports.upload = async (req, res, next) => {
         kernel: sharp.kernel.nearest,
         fit: sharp.fit.contain,
         position: 'center',
-        background: { r: 255, g: 205, b: 195, alpha: 0.5 }
+        //background: { r: 255, g: 205, b: 195, alpha: 0.5 }
     }).toFile(random).then(res => {
         Article.findOneAndUpdate({_id: req.params.id}, { $push: { pictures: process.env.APP_URL + '/' + random } }).then(res => {
             // TODO create CRON to unlink files
