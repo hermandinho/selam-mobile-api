@@ -143,7 +143,7 @@ exports.setDevicePushToken = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
-    await Device.remove({ user: req.userData.id }).exec().then(result => {
+    await Device.remove({ user: req.userData.id, uuid: req.body.uuid }).exec().then(result => {
         res.status(200).json({
             message: "Success"
         })

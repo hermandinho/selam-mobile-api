@@ -52,7 +52,6 @@ exports.trigger = async (event, data) => {
             TITLE = 'Nouvelle visite';
             MESSAGE = `${visitor.name} a visiter votre article ${data.article.title}`;
             users = await User.find({ $and: [ {_id: data.article.user._id}, {_id: { $ne: visitor._id}} ], notifyOnArticleVisite: true}).exec();
-            console.log('--------> FOUND ', JSON.stringify(users));
             break;
     }
     //console.log(users);
