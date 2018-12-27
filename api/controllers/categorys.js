@@ -1,31 +1,25 @@
 const Category = require('../models/category');
+const SubCategory = require('../models/subCategory');
+const Article = require('../models/article');
 
 
-exports.fetch =(req, res, next) => {
-    Category.find()
-        .exec()
-        .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                category: docs.map(doc => {
-                    return {
-                        name: doc.name,
-                        code: doc.code,
-                        created_at: doc.created_at,
-                        updated_at: doc.updated_at,
-                        request: {
-                            type: "GET",
-                            url: "http://localhost:5000/api/v1/category/" + doc._id
-                        }
-                    };
-                })
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
+exports.fetch = async (req, res, next) => {
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 20;
+    const categories = await Category.paginate({}, {page, limit});
+    const results = JSON.parse(JSON.stringify(categories));
+    for (const d of results.docs) {
+        let subCats = await SubCategory.find({ category: d._id }).exec();
+        d.subCats = d.subCats || {};
+        d.subCats.count = subCats.length;
+        for (const s of subCats) {
+            let articles = await Article.find({ subCategory: s._id }).exec();
+            d.articles = d.articles || {};
+            d.articles.count =  d.articles.count || 0;
+            d.articles.count += articles.length;
+        }
+    }
+    res.status(200).json(results);
 };
 
 exports.find = (req, res, next) => {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 
 const categorySchema = mongoose.Schema({
     name: { type: String, required: true },
@@ -6,5 +7,5 @@ const categorySchema = mongoose.Schema({
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });
-
+categorySchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Category', categorySchema);

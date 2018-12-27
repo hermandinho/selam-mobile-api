@@ -4,7 +4,7 @@ const router = express.Router();
 
 const categoryController = require('../controllers/categorys');
 
-router.get('/',checkAuth, categoryController.fetch);
+router.get('/'/*,checkAuth*/, categoryController.fetch);
 router.get('/:id',checkAuth, categoryController.find);
 router.post('/create',checkAuth, categoryController.create);
 router.delete('/:id',checkAuth, categoryController.delete);
