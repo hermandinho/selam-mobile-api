@@ -1,7 +1,18 @@
+const slugify = require('@sindresorhus/slugify');
 const Country = require('./api/models/country');
 const Town = require('./api/models/town');
 const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
+
+const CATEGORY_ICONS = {
+    'Autre': 'more_horiz',
+    'Informatique / Multimedia': 'computer',
+    'Vehicules': 'commute',
+    'Habillement': 'style',
+    'Entreprise': 'format_paint',//location_city
+    'Emploie et services': 'next_week',
+    'Loisir': 'directions_bike',
+};
 
 const CATEGORIES = {
     'Autre': ['Autre'],
@@ -38,7 +49,7 @@ exports.seed = async function (req, res, next) {
 
     let catData = [];
     for (let item in CATEGORIES) {
-        catData.push({ name: item });
+        catData.push({ name: item, webIcon: CATEGORY_ICONS[item], slug: slugify(item, { customReplacements: [['&', '']] }) });
     }
     const cat = await Category.insertMany(catData);
 
@@ -46,7 +57,9 @@ exports.seed = async function (req, res, next) {
     cat.map(c => {
         const items = CATEGORIES[c.name];
         items && items.map(i => {
-            subCatData.push({ name: i, code: i.substr(0, 3).toLowerCase(), category: c._id });
+            subCatData.push({ name: i,
+                code: i.substr(0, 3).toLowerCase(),
+                category: c._id, slug: slugify(i, {customReplacements: [['&', '']] }) });
         });
     });
 

@@ -3,6 +3,7 @@ const mongoosePaginate = require('mongoose-paginate');
 
 const articleSchema = mongoose.Schema({
     title: { type: String, required: true },
+    slug: { type: String, required: false },
     description: { type: String, default: 'Pas disponible.' },
     price: {
         amount: { type: Number, required: true, default: 0 },

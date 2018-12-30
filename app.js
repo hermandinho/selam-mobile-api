@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '50mb', parameterLimit: 
 if (process.env.ENV === 'dev') {
     mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useNewUrlParser: true });
 } else {
-    mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useNewUrlParser: true });
+    mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useNewUrlParser: true, user: process.env.DB_USER, pass: process.env.DB_PASS });
 }
 const db = mongoose.connection;
 
