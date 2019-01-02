@@ -1,4 +1,5 @@
 const faker = require('faker');
+const slugify = require('@sindresorhus/slugify');
 const bcrypt = require('bcrypt');
 const Article = require('./api/models/article');
 const User = require('./api/models/user');
@@ -8,6 +9,16 @@ const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
 const Conversation = require('./api/models/conversation');
 const Message = require('./api/models/message');
+
+const CATEGORY_ICONS = {
+    'Autre': 'more_horiz',
+    'Informatique / Multimedia': 'computer',
+    'Vehicules': 'commute',
+    'Habillement': 'style',
+    'Entreprise': 'format_paint',//location_city
+    'Emploie et services': 'next_week',
+    'Loisir': 'directions_bike',
+};
 
 const customFakes = {
     CATEGORIES: {
@@ -103,7 +114,7 @@ const clearModels = async() => {
 const fakeCategories = async () => {
     let data = [];
     for (let item in customFakes.CATEGORIES) {
-        data.push({ name: item });
+        data.push({ name: item, webIcon: CATEGORY_ICONS[item], slug: slugify(item, { customReplacements: [['&', '']] }) });
     }
     const res = await Category.insertMany(data);
     return Promise.resolve(res);
@@ -175,7 +186,8 @@ const fakeArticles = async (regions, subCats) => {
             published: /*faker.random.boolean() || */true,
             available: /*faker.random.boolean()*/ true,
             exchange: faker.random.boolean(),
-            updated_at: faker.date.between('2015-01-01', '2018-12-16')
+            updated_at: faker.date.between('2015-01-01', '2018-12-16'),
+            slug: slugify(item.title, { customReplacements: [['&', '']] })
         })
     }
     Article.insertMany(articlesData).then(res => {

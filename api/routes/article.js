@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 const articleController = require('../controllers/articles');
 
-router.get('/',checkAuth, articleController.fetch);
+router.get('/'/*,checkAuth*/, articleController.fetch);
 router.get('/:id',checkAuth, articleController.find);
 router.post('/:id/upload', checkAuth, upload.single('fileToUpload'), articleController.upload);
 router.post('/create',checkAuth, articleController.create);

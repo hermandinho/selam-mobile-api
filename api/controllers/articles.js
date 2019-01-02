@@ -1,4 +1,5 @@
 const sharp = require('sharp');
+const slugify = require('@sindresorhus/slugify');
 const fs = require('fs');
 const NotificationManager = require('../../helpers/notifications');
 
@@ -10,6 +11,7 @@ exports.fetch =(req, res, next) => {
     let dateSort = parseInt(req.query.dateSort) || 1;
     let priceSort = parseInt(req.query.priceSort) || -1;
     let regionFilter = req.query.region || '';
+    let subCatFilter = req.query.subCategory || '';
     let fixedPrice = req.query.hasOwnProperty('priceFixed') ? req.query.priceFixed : null;
     let exchange = req.query.hasOwnProperty('exchange') ? req.query.exchange : null;
     let query = req.query.search || '';
@@ -20,6 +22,10 @@ exports.fetch =(req, res, next) => {
     if (regionFilter.trim().length) {
         // TODO why not $in ?
         search['region'] = { $in: regionFilter.split(',') };
+    }
+    if (subCatFilter.trim().length) {
+        // TODO why not $in ?
+        search['subCategory'] = { $in: subCatFilter.split(',') };
     }
     if (fixedPrice !== null)
         search['price.fixed'] = fixedPrice;
@@ -94,6 +100,7 @@ exports.create = (req, res, next) => {
     }
     const article = new Article({
         title: req.body.title,
+        slug: slugify(req.body.title, { customReplacements: [['&', '']] }),
         description: req.body.description,
         price: {
             amount: req.body.price.amount,
