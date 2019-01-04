@@ -107,7 +107,7 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.me = (req, res, next) => {
-    User.findById(req.params.id)
+    User.findById(req.userData.id)
         .exec()
         .then(user => {
             if (!user) {

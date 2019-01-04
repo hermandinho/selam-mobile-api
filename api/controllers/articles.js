@@ -9,19 +9,29 @@ exports.fetch =(req, res, next) => {
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
     let dateSort = parseInt(req.query.dateSort) || 1;
-    let priceSort = parseInt(req.query.priceSort) || -1;
+    let priceSort = parseInt(req.query.priceSort) || null;
+    let priceMax = parseFloat(req.query.priceMax) || null;
+    let priceMin = parseFloat(req.query.priceMin) || null;
     let regionFilter = req.query.region || '';
     let subCatFilter = req.query.subCategory || '';
     let fixedPrice = req.query.hasOwnProperty('priceFixed') ? req.query.priceFixed : null;
     let exchange = req.query.hasOwnProperty('exchange') ? req.query.exchange : null;
     let query = req.query.search || '';
 
+    if (!priceMin)
+        priceMin = 0;
+    if (!priceMax)
+        priceMax = Infinity;
+
     let search = {published: true, available: true};
     let sort = {updated_at: -1};
 
+    search['price.amount'] = { $gte: priceMin, $lte: priceMax };
+
     if (regionFilter.trim().length) {
+        let regions = regionFilter.split(',').filter(r => r.length > 0);
         // TODO why not $in ?
-        search['region'] = { $in: regionFilter.split(',') };
+        search['region'] = { $in: regions };
     }
     if (subCatFilter.trim().length) {
         // TODO why not $in ?
@@ -39,9 +49,10 @@ exports.fetch =(req, res, next) => {
         ];
     }
 
-    if (priceSort)
+    if (priceSort) {
         sort['price.amount'] = priceSort;
-    if (dateSort)
+        delete sort['updated_at'];
+    } else if (dateSort)
         sort['updated_at'] = dateSort;
 
     Article.paginate(search,
@@ -78,7 +89,7 @@ exports.find = (req, res, next) => {
                     message: "article  not found"
                 });
             }
-            if (doc._id !== req.userData.id) {
+            if (req.userData && doc._id !== req.userData.id) {
                 NotificationManager.trigger(NotificationManager.EVENTS.NEW_VISIT, { user: req.userData, article: doc });
             }
             res.status(200).json(doc);
@@ -88,6 +99,30 @@ exports.find = (req, res, next) => {
                 error: err
             });
         });
+};
+
+exports.findSimilar = async (req, res, next) => {
+    let limit = parseInt(req.query.limit) || 3;
+    let article = await Article.findById(req.params.id).exec();
+    if (!article) {
+        return res.status(404).json({error: 'Not found'});
+    }
+
+    let similar = await Article.paginate({
+        subCategory: article.subCategory,
+        _id: { $ne: article._id }
+    }, {
+        page: 1,
+        limit: limit,
+        populate: [
+            { path: 'user', select: '_id name acceptChats acceptPhone phoneNumber acceptSMS' },
+            { path: 'subCategory', select: 'name', populate: { path: 'category', model: 'Category', select: 'name' } },
+            { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
+        ]
+    });
+
+    console.log(similar);
+    return res.status(200).json(similar);
 };
 
 exports.create = (req, res, next) => {
