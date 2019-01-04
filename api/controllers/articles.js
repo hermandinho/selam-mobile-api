@@ -8,7 +8,7 @@ const Article = require('../models/article');
 exports.fetch =(req, res, next) => {
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
-    let dateSort = parseInt(req.query.dateSort) || 1;
+    let dateSort = parseInt(req.query.dateSort) || -1;
     let priceSort = parseInt(req.query.priceSort) || null;
     let priceMax = parseFloat(req.query.priceMax) || null;
     let priceMin = parseFloat(req.query.priceMin) || null;
@@ -114,14 +114,13 @@ exports.findSimilar = async (req, res, next) => {
     }, {
         page: 1,
         limit: limit,
+        sort: { updated_at: -1 },
         populate: [
             { path: 'user', select: '_id name acceptChats acceptPhone phoneNumber acceptSMS' },
             { path: 'subCategory', select: 'name', populate: { path: 'category', model: 'Category', select: 'name' } },
             { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
         ]
     });
-
-    console.log(similar);
     return res.status(200).json(similar);
 };
 
@@ -165,6 +164,7 @@ exports.create = (req, res, next) => {
             });
         });
 };
+
 exports.delete = (req, res, next) => {
     Article.remove({ _id: req.params.id })
         .exec()
@@ -206,7 +206,7 @@ exports.patch = (req, res, next) => {
 }
 
 exports.upload = async (req, res, next) => {
-    // console.log(req.file);
+    // console.log(req);
     let random = req.file.destination.replace('./', '') + '/ok/' + [...Array(60)].map(() => Math.random().toString(36)[3]).join('');
     let ext =  req.file.path.split('.');
     ext = ext[ext.length - 1];

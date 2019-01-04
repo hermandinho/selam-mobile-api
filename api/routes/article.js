@@ -17,7 +17,7 @@ const articleController = require('../controllers/articles');
 router.get('/'/*,checkAuth*/, articleController.fetch);
 router.get('/:id',/*checkAuth,*/ articleController.find);
 router.get('/:id/similar',/*checkAuth,*/ articleController.findSimilar);
-router.post('/:id/upload', checkAuth, upload.single('fileToUpload'), articleController.upload);
+router.post('/:id/upload', /*checkAuth,*/ upload.single('fileToUpload'), articleController.upload);
 router.post('/create',checkAuth, articleController.create);
 router.delete('/:id',checkAuth, articleController.delete);
 router.patch('/:id', checkAuth, articleController.patch),
