@@ -17,6 +17,7 @@ exports.fetch =(req, res, next) => {
     let fixedPrice = req.query.hasOwnProperty('priceFixed') ? req.query.priceFixed : null;
     let exchange = req.query.hasOwnProperty('exchange') ? req.query.exchange : null;
     let query = req.query.search || '';
+    let owner = req.query.user || null;
 
     if (!priceMin)
         priceMin = 0;
@@ -55,6 +56,9 @@ exports.fetch =(req, res, next) => {
     } else if (dateSort)
         sort['updated_at'] = dateSort;
 
+    if (owner) {
+        search['user'] = owner;
+    }
     Article.paginate(search,
         {
             page: page, limit: limit,
