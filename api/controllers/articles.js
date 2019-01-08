@@ -82,7 +82,7 @@ exports.fetch =(req, res, next) => {
 exports.find = (req, res, next) => {
     Article.findById(req.params.id)
         .populate([
-            { path: 'user', select: '_id name acceptChats acceptPhone phoneNumber acceptSMS' },
+            { path: 'user', select: '_id name acceptChats acceptPhone phoneNumber acceptSMS email' },
             { path: 'subCategory', select: 'name', populate: { path: 'category', model: 'Category', select: 'name' } },
             { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
         ])
@@ -189,23 +189,22 @@ exports.patch = (req, res, next) => {
     Article.findByIdAndUpdate(req.params.id, {
         title: req.body.title,
         description: req.body.description,
-        price: req.body.price.amount,
-        priceF: req.body.price.fixed,
-        unit: req.body.unit,
-        picture: req.body.picture,
+        price: { amount: req.body.price.amount, fixed: req.body.price.fixed },
+        currency: req.body.currency,
         region: req.body.region,
-        displayPhoneNumber: req.body.displayPhoneNumber,
-        displayEmail: req.body.displayEmail,
-        user: req.body.user,
         subCategory: req.body.subCategory,
-        published: req.body.published,
-        available: req.body.available,
-        updated_at: req.body.updated_at
-    }, {new: true}, function (err) {
+        updated_at: new Date()
+        //displayPhoneNumber: req.body.displayPhoneNumber,
+        //displayEmail: req.body.displayEmail,
+        //picture: req.body.picture,
+        // user: req.body.user,
+        //published: req.body.published,
+        //available: req.body.available,
+    }, {new: true}, function (err, data) {
         if (err) {
             res.send({state: "erreur update article"})
         }
-        res.send({state: "Success"})
+        res.send(data);
     })
 }
 

@@ -16,11 +16,11 @@ exports.fetch = (req, res, next) => {
         ]
     }, {
         page, limit,
-        sort: { updated_at: -1 },
+        sort: { updated_at: 1 },
         populate: [
-             { path: 'lastMessage', select: 'type content status trigger sent_at', populate: { path: 'trigger', select: 'name picture' } },
-             { path: 'sender', select: 'name picture' },
-             { path: 'receiver', select: 'name picture' },
+             { path: 'lastMessage', select: 'type content status trigger sent_at', populate: { path: 'trigger', select: 'name picture email' } },
+             { path: 'sender', select: 'name picture email' },
+             { path: 'receiver', select: 'name picture email' },
          ]
     }).then(data => {
             res.status(200).json(data);

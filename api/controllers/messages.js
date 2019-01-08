@@ -86,8 +86,8 @@ exports.find = (req, res, next) => {
 };
 
 exports.send = async (req, res, next) => {
-    const receiver = {_id: req.params.receiver};
-    const sender = {_id: req.userData.id};
+    const receiver = { _id: req.params.receiver };
+    const sender = { _id: req.userData.id, name: req.userData.name, email: req.userData.email };
     const content = req.body.content;
 
     const cv = await Factory.getConversation(sender, receiver);
@@ -104,7 +104,9 @@ exports.send = async (req, res, next) => {
     message.save()
         .then(data => {
             devices.map(d => {
-                Pusher.trigger(d.pusherChannel, 'message', data);
+                const msg = JSON.parse(JSON.stringify(data));
+                msg.trigger = sender;
+                Pusher.trigger(d.pusherChannel, 'message', msg);
             });
             Conversation.findOneAndUpdate({_id: cv._id}, {lastMessage: data._id, $inc: {messagesCount: 1}}, {new: true}).exec().then(cv => {
                 NotificationManager.trigger(NotificationManager.EVENTS.NEW_MESSAGE, { from: sender, to: receiver });
