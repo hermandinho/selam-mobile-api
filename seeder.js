@@ -3,6 +3,11 @@ const Country = require('./api/models/country');
 const Town = require('./api/models/town');
 const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
+const Article = require('./api/models/article');
+const User = require('./api/models/user');
+const Conversation = require('./api/models/conversation');
+const Message = require('./api/models/message');
+const Device = require('./api/models/device');
 
 const CATEGORY_ICONS = {
     'Autre': 'more_horiz',
@@ -29,6 +34,11 @@ const clearModels = async() => {
     await Town.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
     await SubCategory.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
     await Category.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
+    await Article.deleteMany({ title: /[a-zA-Z0-9]/ }, function (err) {});
+    await Message.deleteMany({ content: /[a-zA-Z0-9]/ }, function (err) {});
+    await Device.deleteMany({ uuid: /[a-zA-Z0-9]/ }, function (err) {});
+    await Conversation.deleteMany({ messagesCount: { $gte: -1 } }, function (err) {});
+    await User.deleteMany({ role: 'faker' }, function (err) {});
     return Promise.resolve();
 };
 
