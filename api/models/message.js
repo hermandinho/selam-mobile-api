@@ -11,6 +11,7 @@ const messageSchema = mongoose.Schema({
     trigger: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     deleted_by_1: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, default: null },
     deleted_by_2: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, default: null },
+    live: { type: Boolean, default: true },
     sent_at: { type: Date, default: Date.now },
     read_at: { type: Date, default: null }
 });

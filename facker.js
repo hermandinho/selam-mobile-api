@@ -100,12 +100,12 @@ const TEXTS = {
 const userIds = [];
 
 const clearModels = async() => {
-    await Country.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
-    await Town.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
-    await SubCategory.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
-    await Category.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
-    await Article.deleteMany({ title: /[a-zA-Z0-9]/ }, function (err) {});
-    await Message.deleteMany({ content: /[a-zA-Z0-9]/ }, function (err) {});
+    await Country.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Town.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await SubCategory.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Category.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Article.deleteMany({ title: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Message.deleteMany({ content: false }, function (err) {}); // /[a-zA-Z0-9]/
     await Conversation.deleteMany({ _id: { $ne: null } }, function (err) {});
     await User.deleteMany({ role: 'faker' }, function (err) {});
     return Promise.resolve();
@@ -114,7 +114,11 @@ const clearModels = async() => {
 const fakeCategories = async () => {
     let data = [];
     for (let item in customFakes.CATEGORIES) {
-        data.push({ name: item, webIcon: CATEGORY_ICONS[item], slug: slugify(item, { customReplacements: [['&', '']] }) });
+        data.push({
+            name: item,
+            webIcon: CATEGORY_ICONS[item],
+            slug: slugify(item, { customReplacements: [['&', '']] })
+        });
     }
     const res = await Category.insertMany(data);
     return Promise.resolve(res);
@@ -150,6 +154,7 @@ const fakeUsers = async () => {
                     acceptChats: faker.random.boolean(),
                     acceptPhone: faker.random.boolean(),
                     acceptSMS: faker.random.boolean(),
+                    live: false
                 }).save().then(u => { userIds.push(u._id) });
             }
         } else {
@@ -187,8 +192,9 @@ const fakeArticles = async (regions, subCats) => {
             available: /*faker.random.boolean()*/ true,
             exchange: faker.random.boolean(),
             updated_at: faker.date.between('2015-01-01', '2018-12-16'),
-            slug: slugify(item.title, { customReplacements: [['&', '']] })
-        })
+            slug: slugify(item.title, { customReplacements: [['&', '']] }),
+            live: false
+        });
     }
     Article.insertMany(articlesData).then(res => {
         console.log('ARTICLES INSERTED.');
@@ -203,14 +209,14 @@ const fakeRegions = async () => {
             data.push({ name: r, country: c._id });
         });
         Town.insertMany(data).then(docs => {
-            const ids = []
+            const ids = [];
             docs.map(d => {
                 ids.push(d._id)
             });
             fakeCategories().then(cats => {
                 fakeSubCategories(cats).then(sc => {
                     const scIds = [];
-                    sc.map(s => scIds.push(s._id))
+                    sc.map(s => scIds.push(s._id));
                     fakeArticles(ids, scIds);
                 });
             });

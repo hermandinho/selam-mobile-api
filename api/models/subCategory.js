@@ -5,6 +5,7 @@ const subCategorySchema = mongoose.Schema({
     code: { type: String, required: false },
     slug: { type: String, required: false },
     category: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Category" },
+    live: { type: Boolean, default: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });

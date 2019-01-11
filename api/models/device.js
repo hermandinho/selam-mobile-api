@@ -9,6 +9,7 @@ const deviceSchema = mongoose.Schema({
     pushToken: { type: String, required: false },
     enabled: { type: Boolean, required: false, default: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    live: { type: Boolean, default: true },
     lastOnline: { type: Date, default: Date.now },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }

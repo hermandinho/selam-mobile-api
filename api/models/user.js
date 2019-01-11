@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
     pushCategories: [{type: String}],
     notifyOnArticleVisite: { type: Boolean, default: true },
     //deviceUUID: { type: String },
+    live: { type: Boolean, default: true },
     device: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Device' },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },

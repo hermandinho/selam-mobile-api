@@ -25,6 +25,9 @@ exports.create = (req, res, next) => {
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
+        host: 'smtp.hostinger.com',
+        secure: !true,
+        port: 587,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD_EMAIL
@@ -55,12 +58,7 @@ exports.create = (req, res, next) => {
             console.log(result);
             res.status(201).json({
                 message: "Success",
-                data: {
-                    _id: result._id,
-                    email: result.email,
-                    title: result.title,
-                    description: result.description
-                }
+                data: result
             });
         })
         .catch(err => {

@@ -7,6 +7,7 @@ const conversationSchema = mongoose.Schema({
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message", required: false, default: null },
     messagesCount: { type: Number, required: false, default: 0 },
     unreadCount: { type: Number, required: false, default: 0 },
+    live: { type: Boolean, default: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });
