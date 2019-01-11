@@ -2,7 +2,6 @@ const Contact = require('../models/contact');
 var nodemailer = require('nodemailer');
 
 
-
 exports.find = (req, res, next) => {
     Contact.findById(req.params.id)
         .exec()
@@ -12,7 +11,7 @@ exports.find = (req, res, next) => {
                     message: "contact  not found"
                 });
             }
-            res.status(200).json({ town });
+            res.status(200).json({town});
         })
         .catch(err => {
             res.status(500).json({
@@ -71,7 +70,7 @@ exports.create = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Contact.remove({ _id: req.params.id })
+    Contact.remove({_id: req.params.id})
         .exec()
         .then(result => {
             res.status(200).json({
