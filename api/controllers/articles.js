@@ -170,6 +170,7 @@ exports.create = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
+    // TODO delete files
     Article.remove({ _id: req.params.id })
         .exec()
         .then(result => {
