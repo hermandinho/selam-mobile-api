@@ -10,6 +10,7 @@ const  messageRoutes = require('./message');
 const CVFactory = require('../../helpers/conversationFactory')
 const User = require('../models/user')
 const Device = require('../models/device')
+const ContactRoutes = require('./contact')
 
 const Pusher = require('../../helpers/pusher')
 const FCM = require('../../helpers/firebase')
@@ -24,6 +25,7 @@ module.exports = (app) => {
     app.use('/api/v1/town', townRoutes);
     app.use('/api/v1/conversation', conversationRoutes);
     app.use('/api/v1/message', messageRoutes);
+    app.use('/api/v1/contact', ContactRoutes);
 
 
     // DB seeding
