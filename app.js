@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
    if (req.method.toUpperCase() === 'OPTIONS') {
        res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, DELETE');
-       return res.status(200)/*.json({})*/;
+       return res.status(200).json();
    }
    next();
 });
